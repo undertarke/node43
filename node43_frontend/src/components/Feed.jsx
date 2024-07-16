@@ -2,27 +2,43 @@ import React, { useEffect, useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import { Videos, Sidebar } from "./";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { getVideoAPI, getVideoPageAPI, getVideoTypeAPI } from "../utils/fetchFromAPI";
 
 const Feed = () => {
   const [selectedCategory, setSelectedCategory] = useState("New");
   const [videos, setVideos] = useState(null);
 
+  const [totalPage, setTotalPage] = useState(0)
+
   const params = useParams();
 
   useEffect(() => {
 
+    if (params.id)
+      // chạy lại khi dependencies thay đổi
+      getVideoTypeAPI(params.id).then(result => {
+        setVideos(result)
+      })
 
 
   }, [params.id]);
 
   useEffect(() => {
-    let lstItem = [{ video_id: 1, video_name: "Build and Deploy 5 JavaScript & React API Projects in 10 Hours - Full Course | RapidAPI", channelDetail: "", marginTop: " ", thumbnail: "https://i.ytimg.com/vi/QU9c0053UAU/hq720.jpg", channelId: 1, channelTitle: "abc", channelId: 1, channelTitle: "JavaScript Mastery" },
-    { video_id: 2, video_name: "The movies Iron man 4: 0.1 Hours", channelDetail: "", marginTop: " ", thumbnail: "https://i.ytimg.com/vi/t86sKsR4pnk/hq720.jpg", channelId: 1, channelTitle: "abc", channelId: 1, channelTitle: "JavaScript Mastery" }
-    ];
 
-    setVideos(lstItem)
-  }, [])
+    let page = params.page ? params.page : 1
+
+    // chạy lại khi dependencies thay đổi
+    getVideoPageAPI(page).then(result => {
+      setVideos(result.data)
+      setTotalPage(result.totalPage)
+    })
+
+
+  }, [params.page])
+
+
+  const navigate = useNavigate()
 
   return (
     <Stack sx={{ flexDirection: { sx: "column", md: "row" } }}>
@@ -40,6 +56,14 @@ const Feed = () => {
         </Typography>
 
         <Videos videos={videos} />
+
+        {Array.from({ length: totalPage }, (_, index) => {
+          
+          return <button className="btn btn-success mx-2" onClick={() => {
+            navigate(`/${index + 1}`)
+          }}> {index + 1} </button>
+        })}
+
       </Box>
     </Stack>
   );

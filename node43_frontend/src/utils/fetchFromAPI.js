@@ -15,9 +15,42 @@ const options = {
 
 
 
-export const fetchFromAPI = async (url) => {
-  const { data } = await axios.get(`${BASE_URL}/${url}`, options);
+// export const fetchFromAPI = async (url) => {
 
-  return data;
+//   const { data } = await axios.get(`${BASE_URL}/${url}`, options);
+
+//   return data;
+// };
+
+
+
+export const getVideoAPI = async () => {
+
+  const { data } = await axios.get(`${BASE_URL}/video/get-video`);
+
+  return data.content;
 };
 
+export const getTypeAPI = async () => {
+
+  const { data } = await axios.get(`${BASE_URL}/video/get-type`);
+
+  return data.content;
+};
+
+
+export const getVideoTypeAPI = async (typeId) => {
+
+  const { data } = await axios.get(`${BASE_URL}/video/get-video-type/${typeId}`);
+
+  return data.content;
+};
+
+
+
+export const getVideoPageAPI = async (page) => {
+
+  const { data } = await axios.get(`${BASE_URL}/video/get-video-page/${page}`);
+
+  return data.content;
+};
