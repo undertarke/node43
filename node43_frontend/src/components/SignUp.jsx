@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Box, CardMedia } from "@mui/material";
 
 import { Videos, ChannelCard } from ".";
+import { signUpAPI } from "../utils/fetchFromAPI";
 
 const SignUp = () => {
   const [channelDetail, setChannelDetail] = useState();
@@ -31,7 +32,25 @@ const SignUp = () => {
           <input className="form-control" id="pass" />
         </div>
         <div className="col-12">
-          <button type="button" className="btn btn-primary" >
+          <button type="button" className="btn btn-primary"
+
+            onClick={() => {
+              let full_name = document.querySelector("#fullName").value
+              let email = document.querySelector("#email").value
+              let pass_word = document.querySelector("#pass").value
+
+              signUpAPI({ full_name, email, pass_word })
+                .then(result => {
+                  alert(result.message)
+                })
+                .catch(error => {
+                  // console.log(error)
+                  alert(error.response.data.message)
+                })
+
+            }}
+
+          >
             Sign Up
           </button>
         </div>

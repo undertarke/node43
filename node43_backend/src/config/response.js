@@ -3,7 +3,7 @@
 // chuẩn hóa response 
 
 export const responseData = (data, message, status, response) => {
-    response.json({
+    response.status(status).json({
         statusCode: status,
         message,
         content: data,

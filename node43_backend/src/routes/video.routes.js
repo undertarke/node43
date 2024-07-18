@@ -1,5 +1,5 @@
 import express from 'express'
-import { getType, getVideo, getVideoPage, getVideoType } from '../controllers/video.controller.js'
+import { getType, getVideo, getVideoDetail, getVideoPage, getVideoType } from '../controllers/video.controller.js'
 
 const videoRouter = express.Router()
 
@@ -14,7 +14,10 @@ videoRouter.get("/get-type", getType)
 videoRouter.get("/get-video-type/:typeId", getVideoType)
 
 // lấy danh sách video pagination
-videoRouter.get("/get-video-page/:page",getVideoPage)
+videoRouter.get("/get-video-page/:page", getVideoPage)
+
+// lấy thông tin chi tiết video
+videoRouter.get("/get-video-detail/:videoId", getVideoDetail)
 
 
 export default videoRouter  

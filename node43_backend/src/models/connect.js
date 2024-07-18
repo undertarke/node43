@@ -9,4 +9,5 @@ const sequelize = new Sequelize(config.database, config.user, config.pass, {
     dialect: config.dialect
 })
 
+
 export default sequelize;

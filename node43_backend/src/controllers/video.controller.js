@@ -47,7 +47,7 @@ const getVideoPage = async (req, res) => {
     let index = (page - 1) * pageSize;
 
     //SELECT * FROM video LIMIT index, pageSize
-
+    // [{},{}]
     let data = await model.video.findAll({
         offset: index,
         limit: pageSize
@@ -60,4 +60,24 @@ const getVideoPage = async (req, res) => {
 }
 
 
-export { getVideo, getType, getVideoType, getVideoPage }
+const getVideoDetail = async (req, res) => {
+    let { videoId } = req.params;
+
+    // {}
+    let data = await model.video.findOne({
+        where: {
+            video_id: videoId
+        },
+        include:["user"]
+    })
+
+    // tìm theo Primary Key
+    // data = await model.video.findByPk(videoId);
+
+
+    responseData(data, "Thành công", 200, res);
+
+}
+
+
+export { getVideo, getType, getVideoType, getVideoPage, getVideoDetail }

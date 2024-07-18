@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { Box, CardMedia } from "@mui/material";
 
 import { Videos, ChannelCard } from ".";
+import { loginAPI } from "../utils/fetchFromAPI";
+import ReactFacebookLogin from "react-facebook-login";
 
 
 
@@ -29,10 +31,42 @@ const Login = () => {
           <input className="form-control" id="pass" />
         </div>
         <div className="col-12">
-          <button type="button" className="btn btn-primary" >Login</button>
-         
+          <button type="button" className="btn btn-primary"
+
+            onClick={() => {
+              let email = document.querySelector("#email").value
+              let pass_word = document.querySelector("#pass").value
+
+              loginAPI({ email, pass_word })
+                .then(result => {
+
+                  alert(result.message)
+
+                  // lưu localStorage
+
+
+                })
+                .catch(error => {
+                  // console.log(error)
+                  alert(error.response.data.message)
+                })
+
+            }}
+          >Login</button>
+
         </div>
+
+        <ReactFacebookLogin
+          appId="1000846641517293"
+          fields="name,email,picture"
+          callback={(response) => {
+            console.log(response)
+
+          }}
+        />
+
       </form>
+
     </div>
   </div>
 };
