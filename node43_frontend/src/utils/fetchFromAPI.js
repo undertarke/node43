@@ -79,3 +79,27 @@ export const signUpAPI = async (newData) => {
 
   return data;
 };
+
+
+export const loginFacebookAPI = async (newData) => {
+
+  const { data } = await axios.post(`${BASE_URL}/auth/login-face`, newData);
+
+  return data;
+};
+
+
+export const forgetCheckMailAPI = async (newData) => {
+
+  const { data } = await axios.post(`${BASE_URL}/auth/forget-check-email`, newData);
+
+  return data;
+};
+
+
+export const forgetCheckCodeAPI = async (newData) => {
+
+  const { data } = await axios.post(`${BASE_URL}/auth/forget-check-code`, newData);
+
+  return data;
+};

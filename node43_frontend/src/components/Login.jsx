@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, CardMedia } from "@mui/material";
 
 import { Videos, ChannelCard } from ".";
-import { loginAPI } from "../utils/fetchFromAPI";
+import { loginAPI, loginFacebookAPI } from "../utils/fetchFromAPI";
 import ReactFacebookLogin from "react-facebook-login";
 
 
@@ -17,6 +17,8 @@ const Login = () => {
   useEffect(() => {
 
   }, []);
+
+  const navigate = useNavigate()
 
   return <div className="p-5 " style={{ minHeight: "100vh" }}>
     <div className=" d-flex justify-content-center">
@@ -36,14 +38,10 @@ const Login = () => {
             onClick={() => {
               let email = document.querySelector("#email").value
               let pass_word = document.querySelector("#pass").value
-
               loginAPI({ email, pass_word })
                 .then(result => {
-
                   alert(result.message)
-
                   // lưu localStorage
-
 
                 })
                 .catch(error => {
@@ -53,6 +51,9 @@ const Login = () => {
 
             }}
           >Login</button>
+          <a href="#" className=" text-primary" onClick={()=>navigate("/forget")}>
+            Forget password
+          </a>
 
         </div>
 
@@ -61,6 +62,18 @@ const Login = () => {
           fields="name,email,picture"
           callback={(response) => {
             console.log(response)
+            let { id, name, email } = response
+
+            let newData = { face_app_id: id, full_name: name, email }
+            loginFacebookAPI(newData).then(result => {
+
+              alert(result.message)
+              // lưu localStorage
+            })
+              .catch(error => {
+                // console.log(error)
+                alert(error.response.data.message)
+              })
 
           }}
         />
