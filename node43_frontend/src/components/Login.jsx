@@ -43,6 +43,8 @@ const Login = () => {
                   alert(result.message)
                   // lưu localStorage
 
+                  localStorage.setItem("LOGIN_USER",result.content)
+                  window.location.reload()
                 })
                 .catch(error => {
                   // console.log(error)
@@ -69,6 +71,8 @@ const Login = () => {
 
               alert(result.message)
               // lưu localStorage
+              localStorage.setItem("LOGIN_USER",result.content)
+              window.location.reload()
             })
               .catch(error => {
                 // console.log(error)

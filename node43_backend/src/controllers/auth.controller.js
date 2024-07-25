@@ -4,8 +4,10 @@ import { responseData } from '../config/response.js'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { sendMail } from "../config/mail.js"
+import { createToken } from "../config/jwt.js"
 
 // bcrypt: mã hóa 1 chiều
+
 
 const model = initModels(sequelize);
 
@@ -60,7 +62,8 @@ const login = async (req, res) => {
 
         if (bcrypt.compareSync(pass_word, checkEmail.pass_word)) {
 
-            let token = ""
+            let token = createToken({ userId: checkEmail.dataValues.user_id })
+
             responseData(token, "Đăng nhập thành công", 200, res);
         }
         else {
@@ -107,7 +110,9 @@ const loginFacebook = async (req, res) => {
     }
 
     // đã tồn tại
-    let token = "token"
+
+    let token = createToken({ userId: checkUser.dataValues.user_id })
+
     responseData(token, "Đăng nhập thành công", 200, res);
 
 
@@ -136,7 +141,7 @@ const forgetCheckEmail = async (req, res) => {
         await model.code.create(newCode);
 
         // gửi mail
-        sendMail(email, "Mã xác thực","<b style='color:red'>"+randomCode+"</b>")
+        sendMail(email, "Mã xác thực", "<b style='color:red'>" + randomCode + "</b>")
 
 
         responseData("", "Thành công", 200, res);

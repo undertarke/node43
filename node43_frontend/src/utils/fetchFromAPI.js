@@ -9,7 +9,7 @@ const options = {
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
     'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com',
-    // 'token': localStorage.getItem("LOGIN_USER")
+    'token': localStorage.getItem("LOGIN_USER")
   },
 };
 
@@ -26,14 +26,14 @@ const options = {
 
 export const getVideoAPI = async () => {
 
-  const { data } = await axios.get(`${BASE_URL}/video/get-video`);
+  const { data } = await axios.get(`${BASE_URL}/video/get-video`, options);
 
   return data.content;
 };
 
 export const getTypeAPI = async () => {
 
-  const { data } = await axios.get(`${BASE_URL}/video/get-type`);
+  const { data } = await axios.get(`${BASE_URL}/video/get-type`, options);
 
   return data.content;
 };
@@ -41,7 +41,7 @@ export const getTypeAPI = async () => {
 
 export const getVideoTypeAPI = async (typeId) => {
 
-  const { data } = await axios.get(`${BASE_URL}/video/get-video-type/${typeId}`);
+  const { data } = await axios.get(`${BASE_URL}/video/get-video-type/${typeId}`, options);
 
   return data.content;
 };
@@ -50,7 +50,7 @@ export const getVideoTypeAPI = async (typeId) => {
 
 export const getVideoPageAPI = async (page) => {
 
-  const { data } = await axios.get(`${BASE_URL}/video/get-video-page/${page}`);
+  const { data } = await axios.get(`${BASE_URL}/video/get-video-page/${page}`, options);
 
   return data.content;
 };
@@ -59,7 +59,7 @@ export const getVideoPageAPI = async (page) => {
 
 export const getVideoDetailAPI = async (videoId) => {
 
-  const { data } = await axios.get(`${BASE_URL}/video/get-video-detail/${videoId}`);
+  const { data } = await axios.get(`${BASE_URL}/video/get-video-detail/${videoId}`, options);
 
   return data.content;
 };
@@ -67,7 +67,7 @@ export const getVideoDetailAPI = async (videoId) => {
 
 export const loginAPI = async (newData) => {
 
-  const { data } = await axios.post(`${BASE_URL}/auth/login`, newData);
+  const { data } = await axios.post(`${BASE_URL}/auth/login`, newData, options);
 
   return data;
 };
@@ -75,7 +75,7 @@ export const loginAPI = async (newData) => {
 
 export const signUpAPI = async (newData) => {
 
-  const { data } = await axios.post(`${BASE_URL}/auth/sign-up`, newData);
+  const { data } = await axios.post(`${BASE_URL}/auth/sign-up`, newData, options);
 
   return data;
 };
@@ -83,7 +83,7 @@ export const signUpAPI = async (newData) => {
 
 export const loginFacebookAPI = async (newData) => {
 
-  const { data } = await axios.post(`${BASE_URL}/auth/login-face`, newData);
+  const { data } = await axios.post(`${BASE_URL}/auth/login-face`, newData, options);
 
   return data;
 };
@@ -91,7 +91,7 @@ export const loginFacebookAPI = async (newData) => {
 
 export const forgetCheckMailAPI = async (newData) => {
 
-  const { data } = await axios.post(`${BASE_URL}/auth/forget-check-email`, newData);
+  const { data } = await axios.post(`${BASE_URL}/auth/forget-check-email`, newData, options);
 
   return data;
 };
@@ -99,7 +99,8 @@ export const forgetCheckMailAPI = async (newData) => {
 
 export const forgetCheckCodeAPI = async (newData) => {
 
-  const { data } = await axios.post(`${BASE_URL}/auth/forget-check-code`, newData);
+  const { data } = await axios.post(`${BASE_URL}/auth/forget-check-code`, newData, options);
 
   return data;
 };
+

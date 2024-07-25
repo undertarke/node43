@@ -1,11 +1,14 @@
 import express from 'express'
 import { getType, getVideo, getVideoDetail, getVideoPage, getVideoType } from '../controllers/video.controller.js'
+import { middleWareToken, verifyToken } from '../config/jwt.js';
 
 const videoRouter = express.Router()
 
 
 // lấy danh sách video
 videoRouter.get("/get-video", getVideo)
+
+
 
 // lấy danh sách loại video
 videoRouter.get("/get-type", getType)
@@ -14,7 +17,7 @@ videoRouter.get("/get-type", getType)
 videoRouter.get("/get-video-type/:typeId", getVideoType)
 
 // lấy danh sách video pagination
-videoRouter.get("/get-video-page/:page", getVideoPage)
+videoRouter.get("/get-video-page/:page", middleWareToken, getVideoPage)
 
 // lấy thông tin chi tiết video
 videoRouter.get("/get-video-detail/:videoId", getVideoDetail)

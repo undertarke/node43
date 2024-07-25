@@ -49,3 +49,24 @@ app.listen(8080)
 
 // })
 
+// yarn add swagger-ui-express swagger-jsdoc
+
+import swaggerUi from 'swagger-ui-express'
+import swaggerJsDoc from 'swagger-jsdoc'
+
+
+const options = {
+    definition: {
+        info: {
+            title: "api",
+            version: "1.0.0"
+        }
+    },
+    apis: ["src/swagger/index.js"]
+}
+const specs = swaggerJsDoc(options);
+
+
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
+
+// yarn add nodemon
