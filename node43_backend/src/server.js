@@ -9,6 +9,8 @@ const app = express();
 // khai báo middleware
 app.use(express.json())
 
+app.use(express.static(".")) // định vị load thư mục tài nguyên
+
 // yarn add cors
 app.use(cors()) //  cho phép tất cả domain truy cập
 

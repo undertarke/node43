@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 export const BASE_URL = 'http://localhost:8080';
+export const BASE_URL_IMG = 'http://localhost:8080/public/imgs/';
 
 const options = {
   params: {
@@ -9,7 +10,8 @@ const options = {
   headers: {
     'X-RapidAPI-Key': process.env.REACT_APP_RAPID_API_KEY,
     'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com',
-    'token': localStorage.getItem("LOGIN_USER")
+    'token': localStorage.getItem("LOGIN_USER"),
+    'Content-Type': 'multipart/form-data'
   },
 };
 
@@ -104,3 +106,16 @@ export const forgetCheckCodeAPI = async (newData) => {
   return data;
 };
 
+
+export const uploadCloudAPI = async (formData) => {
+  const { data } = await axios.post("https://api.cloudinary.com/v1_1/dghvdbogx/auto/upload", formData)
+
+  return data
+}
+
+
+export const uploadVideoAPI = async (formData) => {
+  const { data } = await axios.post(`${BASE_URL}/video/upload-video`, formData, options)
+
+  return data
+}

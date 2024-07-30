@@ -6,6 +6,7 @@ import { Videos, ChannelCard } from ".";
 
 import ReactPlayer from "react-player";
 import { DOMAIN_BE_IMG } from "../utils/constants";
+import { uploadCloudAPI, uploadVideoAPI } from "../utils/fetchFromAPI";
 
 const InfoUser = () => {
   const [channelDetail, setChannelDetail] = useState();
@@ -35,7 +36,40 @@ const InfoUser = () => {
           <div className="col-2">
             <img className="rounded-circle" src={avatar} width="100%" />
 
-            <input className="form-control" type="file" id="formFile" />
+            <input multiple className="form-control" type="file" id="formFile" onChange={(event) => {
+              // trả về array
+              let file = document.querySelector("#formFile").files
+
+              // let formData = new FormData()
+              // formData.append("file", file)
+              // formData.append("upload_preset", "q2m6yakm") // dùng để xác thực đúng user quản trị hay không
+
+
+              // uploadCloudAPI(formData).then(result => {
+              //   console.log(result)
+              // }).catch(error => {
+              //   console.log(error)
+              // })
+
+              let formData = new FormData()
+
+              //for of , for in
+              
+              for (let item of file) {
+
+                formData.append("hinhAnh", item)
+              }
+
+
+              // let formData = {
+              //   hinhAnh: file
+              // }
+
+              uploadVideoAPI(formData).then(result => {
+                console.log(result)
+              })
+
+            }} />
 
           </div>
           <div className=" col-10">

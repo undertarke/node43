@@ -22,16 +22,17 @@ export const decodeToken = (token) => {
 }
 
 export const middleWareToken = (req, res, next) => {
+    next()
 
-    let { token } = req.headers;
+    // let { token } = req.headers;
 
-    let checkToken = verifyToken(token)
-    if (checkToken == null) {
+    // let checkToken = verifyToken(token)
+    // if (checkToken == null) {
 
-        next()
+    //     next()
 
-    } else {
-        console.log(checkToken)
-        res.status(401).send("Authorized")
-    }
+    // } else {
+    //     console.log(checkToken)
+    //     res.status(401).send("Authorized")
+    // }
 }

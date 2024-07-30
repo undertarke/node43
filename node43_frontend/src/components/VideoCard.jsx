@@ -4,13 +4,14 @@ import { Typography, Card, CardContent, CardMedia } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import { demoThumbnailUrl, demoVideoUrl, demoVideoTitle, demoChannelUrl, demoChannelTitle, DOMAIN_BE_IMG } from "../utils/constants";
+import { BASE_URL_IMG } from '../utils/fetchFromAPI';
 
 const VideoCard = ({ video: { video_id, video_name, thumbnail, channelId, channelTitle } }) => {
 
 
   return <Card sx={{ width: { xs: '100%', sm: '358px', md: "320px", }, boxShadow: "none", borderRadius: 0 }}>
     <Link to={video_id ? `/video/${video_id}` : `/video/cV2gBU6hKfY`}>
-      <CardMedia image={thumbnail} alt={video_name}
+      <CardMedia image={BASE_URL_IMG + thumbnail} alt={video_name}
         sx={{ width: { xs: '100%', sm: '358px' }, height: 180 }}
       />
     </Link>
