@@ -4,7 +4,7 @@ import { responseData } from '../config/response.js'
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import { sendMail } from "../config/mail.js"
-import { createToken } from "../config/jwt.js"
+import { createToken, createTokenRef, decodeToken, verifyToken, verifyTokenRef } from "../config/jwt.js"
 
 // bcrypt: mã hóa 1 chiều
 
@@ -61,8 +61,20 @@ const login = async (req, res) => {
     if (checkEmail) {
 
         if (bcrypt.compareSync(pass_word, checkEmail.pass_word)) {
+            let key = new Date().getTime()
 
-            let token = createToken({ userId: checkEmail.dataValues.user_id })
+            let token = createToken({ userId: checkEmail.dataValues.user_id, key })
+
+            // create refresh token 
+            let refreshToken = createTokenRef({ userId: checkEmail.dataValues.user_id, key })
+            checkEmail.refresh_token = refreshToken
+
+            await model.users.update(checkEmail.dataValues, {
+                where: {
+                    user_id: checkEmail.dataValues.user_id
+                }
+            })
+
 
             responseData(token, "Đăng nhập thành công", 200, res);
         }
@@ -82,6 +94,7 @@ const login = async (req, res) => {
 const loginFacebook = async (req, res) => {
 
     let { face_app_id, full_name, email } = req.body
+
 
     // check face_app_id
     let checkUser = await model.users.findOne({
@@ -104,14 +117,28 @@ const loginFacebook = async (req, res) => {
         }
 
         // INSERT INTO VALUES
-        await model.users.create(newData)
+        checkUser = await model.users.create(newData)
 
 
     }
-
+ // 1111
+ 
     // đã tồn tại
 
-    let token = createToken({ userId: checkUser.dataValues.user_id })
+    let key = new Date().getTime() // 2222
+
+    let token = createToken({ userId: checkUser.dataValues.user_id, key })
+
+
+    // create refresh token 
+    let refreshToken = createTokenRef({ userId: checkUser.dataValues.user_id, key })
+    checkUser.refresh_token = refreshToken
+
+    await model.users.update(checkUser.dataValues, {
+        where: {
+            user_id: checkUser.dataValues.user_id
+        }
+    })
 
     responseData(token, "Đăng nhập thành công", 200, res);
 
@@ -180,4 +207,40 @@ const forgetCheckCode = async (req, res) => {
     }
 }
 
-export { signUp, login, loginFacebook, forgetCheckEmail, forgetCheckCode }
+const resetToken = async (req, res) => {
+
+    // verify token
+    let { token } = req.headers;
+    let checkToken = verifyToken(token)
+    if (checkToken != null && checkToken.name != "TokenExpiredError") { // loại trừ lỗi expired
+        res.status(401).send("Unauthorized token")
+        return
+    }
+
+    // verify refresh token
+    let tokenDecode = decodeToken(token)
+
+    // lấy user trong database để get refresh token kiểm tra
+    let getUser = await model.users.findByPk(tokenDecode.data.userId);
+
+    let checkTokenRef = verifyTokenRef(getUser.refresh_token)
+
+    if (checkTokenRef != null) {
+        res.status(401).send("Unauthorized refresh token")
+        return
+    }
+
+    let tokenRefDecode = decodeToken(getUser.refresh_token)
+    //  check key
+    if (tokenDecode.data.key != tokenRefDecode.data.key) {
+        res.status(401).send("Unauthorized refresh token")
+        return
+    }
+
+
+    // create access token
+    let newToken = createToken({ userId: tokenDecode.data.userId, key: tokenRefDecode.data.key })
+    responseData(newToken, "Đăng nhập thành công", 200, res);
+}
+
+export { signUp, login, loginFacebook, forgetCheckEmail, forgetCheckCode, resetToken }

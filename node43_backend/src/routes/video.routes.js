@@ -2,40 +2,44 @@ import express from 'express'
 import { getType, getVideo, getVideoDetail, getVideoPage, getVideoType } from '../controllers/video.controller.js'
 import { middleWareToken, verifyToken } from '../config/jwt.js';
 
+import compress_images from 'compress-images';
+
+// file system
+import fs from 'fs'
+import { upload } from '../config/upload.js';
+
 const videoRouter = express.Router()
 
+videoRouter.post("/upload-video", upload.single("hinhAnh"), (req, res) => {
 
+    let file = req.file
 
-import multer, { diskStorage } from 'multer'
-// yarn add multer
-// process.cwd(): trả về đường dẫn gốc của project
-const upload = multer({
+    compress_images(
+        process.cwd() + "/public/imgs/" + file.filename,
+        process.cwd() + "/public/file/",
+        { compress_force: false, statistic: true, autoupdate: true },
+        false,
+        { jpg: { engine: "mozjpeg", command: ["-quality", "15"] } },
+        { png: { engine: "pngquant", command: ["--quality=20-50", "-o"] } },
+        { svg: { engine: "svgo", command: "--multipass" } },
+        { gif: { engine: "gifsicle", command: ["--colors", "64", "--use-col=web"] } },
 
-    storage: diskStorage({
-        destination: process.cwd() + "/public/imgs",// định nghĩa thư mục lưu file,
-        filename: (req, file, callback) => { // đổi tên file
-
-            //  ◦•●◉✿๖ۣۜ£¡ղƙ ✘¡ղƙ đẹρッ✿◉●•◦      .jpg
-            // a-z, 0-9, A-Z
-
-            let newName = new Date().getTime() + "_" + file.originalname; // 17442042443 , DD_MM_YYYY_hh_mm_ss_ms
-
-            callback(null, newName)
+        function (error, completed, statistic) {
+            console.log("-------------");
+            console.log(error);
+            console.log(completed);
+            console.log(statistic);
+            console.log("-------------");
         }
-    })
-})
 
-videoRouter.post("/upload-video", upload.array("hinhAnh"), (req, res) => {
+    );
 
-    let file = req.files
-
+    // ORM sequelize update 
 
     res.send(file)
 
 })
 
-// file system
-import fs from 'fs'
 
 videoRouter.post("/upload-base", upload.single("hinhAnh"), (req, res) => {
 
@@ -57,7 +61,7 @@ videoRouter.post("/upload-base", upload.single("hinhAnh"), (req, res) => {
 
 
 // lấy danh sách video
-videoRouter.get("/get-video", getVideo)
+videoRouter.get("/get-video",middleWareToken, getVideo)
 
 
 

@@ -6,7 +6,7 @@ export const createToken = (data) => {
     // tham số 1 payload: string, buffer, object
     // tham số 2 signalture (secret key)
     // tham số 3 header
-    return jwt.sign({ data: data }, "NODE_43", { algorithm: "HS256", expiresIn: "5m" })
+    return jwt.sign({ data: data }, "NODE_43", { algorithm: "HS256", expiresIn: "5s" })
 }
 
 export const verifyToken = (token) => {
@@ -17,22 +17,32 @@ export const verifyToken = (token) => {
     return jwt.verify(token, "NODE_43", (error) => { return error })
 }
 
+// xử lý refresh token
+export const createTokenRef = (data) => {
+
+    return jwt.sign({ data: data }, "RESET", { algorithm: "HS256", expiresIn: "7d" })
+}
+
+export const verifyTokenRef = token => jwt.verify(token, "RESET", error => error)
+
+
+
 export const decodeToken = (token) => {
     return jwt.decode(token)
 }
 
 export const middleWareToken = (req, res, next) => {
-    next()
 
-    // let { token } = req.headers;
 
-    // let checkToken = verifyToken(token)
-    // if (checkToken == null) {
+    let { token } = req.headers;
 
-    //     next()
+    let checkToken = verifyToken(token)
+    if (checkToken == null) {
 
-    // } else {
-    //     console.log(checkToken)
-    //     res.status(401).send("Authorized")
-    // }
+        next()
+
+    } else {
+
+        res.status(401).send(checkToken.name)
+    }
 }
