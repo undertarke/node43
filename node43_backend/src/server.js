@@ -72,3 +72,13 @@ const specs = swaggerJsDoc(options);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
 
 // yarn add nodemon
+
+
+
+
+// B1: yarn add prisma @prisma/client
+// B2: yarn prisma init    // (npx prisma init)
+// B3: cập nhật lại chuỗi kết nối database
+// B4: chạy databasefirst => yarn prisma db pull    // (npx prisma db pull)
+
+// B5: yarn prisma generate 

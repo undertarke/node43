@@ -1,15 +1,52 @@
 import initModels from "../models/init-models.js";
 import sequelize from "../models/connect.js";
 import { responseData } from "../config/response.js";
-
+import { PrismaClient } from '@prisma/client'
 
 const model = initModels(sequelize)
 
+const prisma = new PrismaClient()
 
 const getVideo = async (req, res) => {
 
-    //SELECT * FROM video
-    let data = await model.video.findAll();
+    //SELECT * FROM video WHERE video_id = 1
+    // let data = await model.video.findAll({where});
+
+    let { videoId } = req.query;
+
+    let data = await prisma.video_type.findMany({
+        where: {
+            type_id: Number(videoId)
+        },
+
+        include: {
+            video: {
+                include: {
+                    users: true
+                }
+            }
+        }
+    })
+
+
+    // tìm kiếm trả về object
+    // model.video.findOne()
+    // prisma.video.findFirst()
+    // prisma.video.findUnique()
+
+    // // thêm
+    // let newData = { video_id, video_name }
+    // model.video.create(newData)
+    // prisma.video.create({ data: newData })
+
+    // // sửa
+    // model.video.update(newData, { where })
+    // prisma.video.update({ data: newData, where })
+
+    // // xóa
+    // model.video.destroy()
+    // prisma.video.delete()
+
 
     // res.send(data)
     responseData(data, "Thành công", 200, res);
@@ -68,7 +105,7 @@ const getVideoDetail = async (req, res) => {
         where: {
             video_id: videoId
         },
-        include:["user"]
+        include: ["user"]
     })
 
     // tìm theo Primary Key

@@ -61,7 +61,7 @@ videoRouter.post("/upload-base", upload.single("hinhAnh"), (req, res) => {
 
 
 // lấy danh sách video
-videoRouter.get("/get-video",middleWareToken, getVideo)
+videoRouter.get("/get-video", getVideo)
 
 
 
