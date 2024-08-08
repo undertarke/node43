@@ -82,3 +82,93 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(specs));
 // B4: chạy databasefirst => yarn prisma db pull    // (npx prisma db pull)
 
 // B5: yarn prisma generate 
+
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient()
+
+app.get("/get-user", async (req, res) => {
+    let data = await prisma.users.findMany()
+    res.send(data)
+})
+
+
+
+
+// yarn add socket.io => server riêng chạy realtime => port riêng
+
+// import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
+
+// const app = express();
+const httpServer = createServer(app);
+
+// đối tượng socket server
+const io = new Server(httpServer, { /* options */
+    cors: {
+        origin: "*"
+    }
+});
+
+// hàm lắng nghe: on
+// tham số 1: nhận key (key của socket quy định hoặc tự mình quy định)
+// tham số 2: function
+
+// dùng để nhận biết client kết nối vào server 
+let number = 0
+io.on("connection", (socket) => {
+    // socket client
+    // console.log(socket.id)
+
+    // hàm gửi dữ liệu: emit
+    // tham số 1: key tự quy định
+    // tham số 2: dữ liệu muốn gửi đi (string,number, object, list,...)
+    // io.emit("send-socket-id", socket.id)
+
+    // socket.on("send-click", () => {
+
+    //     io.emit("send-number", number++)
+
+    // })
+
+
+    // socket.on("disconnect", (reason, desc) => {
+    //     // console.log(reason)
+    // })
+
+
+    // room
+    socket.on("join-room", async (roomId) => {
+
+        socket.join(roomId)
+
+        let data = await prisma.chat.findMany({
+            where: {
+                room_id: roomId
+            }
+        })
+
+        io.to(roomId).emit("data-chat", data)
+
+    })
+
+    // message, userId, roomId
+    socket.on("send-mess", async (data) => {
+
+        let newChat = {
+            user_id: data.userId,
+            content: data.message,
+            room_id: data.roomId,
+            date: new Date()
+        }
+        await prisma.chat.create({ data: newChat })
+
+        io.to(data.roomId).emit("sv-send-mess", data)
+
+    })
+
+
+});
+
+
+httpServer.listen(8081);

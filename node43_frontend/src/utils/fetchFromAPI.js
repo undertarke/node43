@@ -25,6 +25,14 @@ const options = {
 // };
 
 
+export const getUserAPI = async () => {
+
+  const { data } = await axios.get(`${BASE_URL}/get-user`, options);
+
+  return data;
+};
+
+
 
 export const getTypeAPI = async () => {
 
@@ -147,7 +155,7 @@ axios.interceptors.response.use(function (response) {
       window.location.reload()
 
     }).catch(error => {
-      alert("Token và refresh token hết hạn")
+      // alert("Token và refresh token hết hạn")
     })
   }
 

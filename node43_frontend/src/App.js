@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 import Footer from "./components/Footer";
 import ForgetPass from "./components/ForgetPass";
+import Socket from "./components/Socket";
 
 const App = () => (
   <BrowserRouter>
@@ -28,6 +29,8 @@ const App = () => (
 
 
         <Route path='/forget' element={<ForgetPass />} />
+        
+        <Route path='/socket' element={<Socket />} />
       </Routes>
       <Footer />
     </Box>

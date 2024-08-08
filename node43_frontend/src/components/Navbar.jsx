@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 
 import { logo } from "../utils/constants";
 import { ChannelCard, SearchBar } from "./";
+import { jwtDecode } from "jwt-decode";
 
 
 const Navbar = () => {
 
   let userLogin = localStorage.getItem("LOGIN_USER")
 
+  let infoUser = userLogin ? jwtDecode(userLogin) : null
   return (
     <Stack direction="row" alignItems="center" p={2} sx={{ background: '#000', top: 0, justifyContent: "space-between" }}>
       <Link to="/" style={{ display: "flex", alignItems: "center" }}>
@@ -24,7 +26,10 @@ const Navbar = () => {
         </div>
 
         <div className="dropdown" hidden={userLogin ? false : true}>
+          <h1 className="text-white">
 
+            {infoUser?.data.fullName}
+          </h1>
           <Avatar type="button" data-bs-toggle="dropdown" aria-expanded="false" />
           <ul className="dropdown-menu">
             <Link to={"channel/1"} >
@@ -36,8 +41,8 @@ const Navbar = () => {
             <li><a className="dropdown-item" href="#"
 
               onClick={() => {
-                  localStorage.removeItem("LOGIN_USER")
-                  window.location.reload();
+                localStorage.removeItem("LOGIN_USER")
+                window.location.reload();
               }}>Đăng xuất</a></li>
           </ul>
         </div>

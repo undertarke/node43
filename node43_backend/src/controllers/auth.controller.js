@@ -63,7 +63,7 @@ const login = async (req, res) => {
         if (bcrypt.compareSync(pass_word, checkEmail.pass_word)) {
             let key = new Date().getTime()
 
-            let token = createToken({ userId: checkEmail.dataValues.user_id, key })
+            let token = createToken({ userId: checkEmail.dataValues.user_id, fullName: checkEmail.dataValues.full_name , key })
 
             // create refresh token 
             let refreshToken = createTokenRef({ userId: checkEmail.dataValues.user_id, key })
