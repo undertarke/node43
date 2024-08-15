@@ -15,7 +15,7 @@ async function bootstrap() {
 
 
   // yarn add @nestjs/swagger swagger-ui-express
-  const config = new DocumentBuilder().setTitle("Node 43").setVersion("100").setDescription("đây là mô tả").build()
+  const config = new DocumentBuilder().setTitle("Node 43").setVersion("100").setDescription("đây là mô tả").addBearerAuth().build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup("/swagger", app, document)
 
